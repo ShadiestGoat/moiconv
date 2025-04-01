@@ -41,7 +41,7 @@ jobs:
         with:
           go-version: '1.24.1'
       - name: Build ${{ matrix.goos }}-${{ matrix.goarch }}
-        run: go build -v -o '$FILE_NAME' .
+        run: go build -v -o '${{ env.FILE_NAME }}' .
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
