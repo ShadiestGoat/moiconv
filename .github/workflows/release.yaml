@@ -62,10 +62,12 @@ jobs:
         with:
           pattern: '*-${{ github.ref_name }}*'
           path: ./release
+      - run: ls ./release
       - name: Create a Release
         uses: softprops/action-gh-release@v2
         with:
           name: Release ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
+          fail_on_unmatched_files: true
           files: |-
-            ./release/*
+            ./release/**/*
