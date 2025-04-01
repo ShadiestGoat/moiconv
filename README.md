@@ -10,7 +10,8 @@ If you do not, go to the github releases and download the latest release for you
 
 ## Usage
 
-> [!NOTE] For windows users
+> [!IMPORTANT]
+> **For windows users**
 > Whenever you see `moiconv` in this section, you have to use `moiconv.exe`
 > Also, the recommendation is to either use wsl, or Powershell
 
