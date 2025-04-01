@@ -1,0 +1,72 @@
+name: Test
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: v*
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.24.1'
+      
+      - name: Test
+        run: go test -vet=all -v ./...
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: [amd64, arm64]
+        outSuffix: ['', '.exe']
+        exclude:
+          - goos: windows
+            outSuffix: ''
+          - goos: linux
+            outSuffix: '.exe'
+          - goos: darwin
+            outSuffix: '.exe'
+    env:
+      FILE_NAME: moiconv-${{ matrix.goos }}-${{ matrix.goarch }}-${{ github.ref_name }}${{ matrix.outSuffix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.24.1'
+      - name: Build ${{ matrix.goos }}-${{ matrix.goarch }}
+        run:
+          mkdir ./output
+          go build -v . -o '$FILE_NAME'
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.FILE_NAME }}
+          path: ${{ env.FILE_NAME }}
+          retention-days: 1
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: '*-${{ github.action_ref }}*'
+          path: ./release
+      - name: Create a Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          files: |-
+            ./release/*
