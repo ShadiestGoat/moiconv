@@ -6,7 +6,7 @@ This is a helpful util that converts MOD+MOI files into a desired format, while 
 
 If you have go setup, simply do `go install github.com/shadiestgoat/moiconv@latest`
 
-If you do not, go to the github releases and download the latest release for your platform
+If you do not, [go to the github releases and download the latest release](https://github.com/ShadiestGoat/moiconv/releases/latest) for your platform
 
 ## Usage
 
