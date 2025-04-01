@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: '*-${{ github.action_ref }}*'
+          pattern: '*-${{ github.ref_name }}*'
           path: ./release
       - name: Create a Release
         uses: softprops/action-gh-release@v2
